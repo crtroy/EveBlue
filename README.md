@@ -11,7 +11,7 @@ Setup is pretty straight forward. Just run the file **eveBlue.py**.
 
 If Database needs to be updated (or created for some reason) just make sure the files **invTypes.csv** and **industryActivityMaterials.csv** are in the **data** folder and run **createDB.py**.
 
-This program has only been tested using Windows 10.
+This program has only been tested using Python3 on Windows 10.
 
 ## License
 This work is licensed under the "MIT License". Please see the file LICENSE in the source distribution of this software for license terms.
