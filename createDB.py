@@ -1,3 +1,8 @@
+# Copyright © 2018 Troy Coats
+# This work is available under the "MIT License".
+# Please see the file LICENSE in this distribution
+# for license terms.
+
 import os
 import csv
 import sqlite3
@@ -23,8 +28,8 @@ if not len(tableNames) == tableCount:
     # If not, disconnect from db, delete db, reconnect to db
     if not len(tableNames) == 0:
         conn.close()
-        os.remove("blueprints.db")
-        conn = sqlite3.connect("blueprints.db")
+        os.remove("data/blueprints.db")
+        conn = sqlite3.connect("data/blueprints.db")
         c = conn.cursor()
     
     # Create table itemList

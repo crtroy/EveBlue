@@ -1,3 +1,8 @@
+# Copyright © 2018 Troy Coats
+# This work is available under the "MIT License".
+# Please see the file LICENSE in this distribution
+# for license terms.
+
 from tkinter import *
 import sqlite3
 
@@ -26,6 +31,7 @@ def loadfont(fontpath, private=True, enumerable=False):
     numFontsAdded = AddFontResourceEx(byref(pathbuf), flags, 0)
     return bool(numFontsAdded)
 
+# Clear/reset lists
 def resetTables(conn):
     blueprintList.delete('0','end')  
     materialList.delete('0','end')
@@ -34,7 +40,8 @@ def resetTables(conn):
     quantityList.config(height=1)
     materialList.insert('end', 'No Blueprint Selected')
     quantityList.insert('end', '00000000')
-    
+
+# Populate lists with new data    
 def populateBlueprints(conn):
     resetTables(conn)
     searchBar.delete('0', 'end')
@@ -52,7 +59,8 @@ def populateBlueprints(conn):
     
     blueprintList.configure(height=22)
     scrollbar.grid(padx=440, pady=168, row=0,column=0, ipady=405)
-    
+
+# Search DB for blueprint based on user input    
 def searchForBlueprint(conn):
     resetTables(conn)
     result = searchBar.get()
