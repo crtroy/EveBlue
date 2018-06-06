@@ -2,7 +2,7 @@ import os
 import csv
 import sqlite3
 
-conn = sqlite3.connect("blueprints.db")
+conn = sqlite3.connect("data/blueprints.db")
 c = conn.cursor()
 tableCount = 1
 

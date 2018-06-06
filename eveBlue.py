@@ -140,10 +140,10 @@ def CurrentSelection(event, conn):
 ##################################################################################################
         
 # Load "Eve Alpha" font      
-loadfont("eve.ttf")
+loadfont("data/eve.ttf")
         
 # Connect to blueprints.db
-conn = sqlite3.connect("blueprints.db")
+conn = sqlite3.connect("data/blueprints.db")
 c = conn.cursor()
 
 # Create main window
@@ -153,7 +153,7 @@ window.minsize(width=1200, height=1080)
 window.maxsize(width=1200, height=1080)
 
 # Setup background image
-backgroundImage = PhotoImage(file="eve.png")
+backgroundImage = PhotoImage(file="data/eve.png")
 backgroundLabel = Label(image=backgroundImage)
 backgroundLabel.place(x=-600, y=0, relheight=1)
 
