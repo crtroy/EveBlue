@@ -227,8 +227,6 @@ materialHeader = Label(font=("eve alpha", 14), text="Materials")
 quantityHeader = Label(font=("eve alpha", 14), text="Quantity")
 searchbarHeader.place(x=10, y=10)
 blueprintHeader.place(x=10, y=128)
-
-
 timeHeader.place(x=480, y=168)
 materialHeader.place(x=480, y=268)
 quantityHeader.place(x=915, y=268)
@@ -246,8 +244,6 @@ materialList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("
 quantityList = Listbox(fg="#ffffff", background = "#707070", width=18)
 quantityList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 blueprintList.place(x=10, y=168)
-
-
 timeList.place(x=480, y=208)
 materialList.place(x=480, y=308)
 quantityList.place(x=915, y=308)
