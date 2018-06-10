@@ -34,15 +34,51 @@ def loadfont(fontpath, private=True, enumerable=False):
 # Clear/reset lists
 def resetTables(conn):
     blueprintList.delete('0','end')  
+    timeList.delete('0','end') 
     materialList.delete('0','end')
     quantityList.delete('0','end')
+    timeList.config(height=1)
     materialList.config(height=1)
     quantityList.config(height=1)
+    timeList.insert('end', 'No Blueprint Selected')
     materialList.insert('end', 'No Blueprint Selected')
     quantityList.insert('end', '00000000')
 
+# Calculate build time
+def buildTime(time):
+    days = int(time / 86400)
+    hours = int((time - 86400 * days) / 3600)
+    minutes = int(((time - 86400 * days) - (3600 * hours)) / 60)
+    seconds = int(((time - 86400 * days) - (3600 * hours)) - (60 * minutes))
+    if days > 0:
+        totalTime = str(days) + " day"
+        if days > 1:
+            totalTime = totalTime + "s"
+    if hours > 0:
+        if days > 0:
+            totalTime = totalTime + ", " + str(hours) + " hour"
+        else:
+            totalTime = str(hours) + " hour"
+        if hours > 1:
+            totalTime = totalTime + "s"
+    if minutes > 0:
+        if days > 0 or hours > 0:
+            totalTime = totalTime + ", " + str(minutes) + " minute"
+        else:
+            totalTime = str(minutes) + " minute"
+        if minutes > 1:
+            totalTime = totalTime + "s"
+    if seconds > 0:
+        if days > 0 or hours > 0 or minutes > 0:
+            totalTime = totalTime + ", " + str(seconds) + " second"
+        else:
+            totalTime = str(seconds) + " second"
+        if seconds > 1:
+            totalTime = totalTime + "s"
+    return totalTime
+   
 # Populate lists with new data    
-def populateBlueprints(conn):
+def populateBlueprints():
     resetTables(conn)
     searchBar.delete('0', 'end')
     c.execute("""SELECT DISTINCT A.typeName
@@ -61,7 +97,7 @@ def populateBlueprints(conn):
     scrollbar.grid(padx=440, pady=168, row=0,column=0, ipady=405)
 
 # Search DB for blueprint based on user input    
-def searchForBlueprint(conn):
+def searchForBlueprint():
     resetTables(conn)
     result = searchBar.get()
 	# Display exact result only
@@ -98,32 +134,45 @@ def searchForBlueprint(conn):
 # Function to populate material and material count blueprintListes
 # This function is called every time a line in the blueprint
 # blueprintList is selected, whether it is by mouseclick or arrow key.
-def CurrentSelection(event, conn):
+def CurrentSelection(event):
     widget = event.widget
     # Check to see if listBox was set to empty
     if blueprintList.get(0,0) != ('Search returned no results',):
         selected = widget.get(widget.curselection()[0])
         
         # Delete old values from materials and quantity listBoxes
+        timeList.delete('0','end')        
         materialList.delete('0','end')
         quantityList.delete('0','end')
-        c.execute("""SELECT typeName, quantity
+        
+        # Insert time into the time list
+        c.execute("""SELECT time
+                            FROM timeList A INNER JOIN(
+                                SELECT typeID
+                                FROM itemList
+                                WHERE typeName = ?
+                            ) B
+                            WHERE A.typeID = B.typeID""", [selected])
+        for row in c:
+            time = row[0]
+        timeList.insert('end', buildTime(time))
+ 
+         # Insert materials and quantities into respective listBoxes
+        c.execute("""SELECT typeName, quantity, A.typeID
                      FROM itemList A INNER JOIN(
                          SELECT *
                          FROM materialList
-                         WHERE activityID = '1' AND typeID IN(
+                         WHERE typeID IN(
                              SELECT typeID
                              FROM itemList
                              WHERE typeName = ?
                          )
                      ) B
-                     WHERE A.typeID = B.materialTypeID""", [selected])
-        
-        # Insert correct materials and quantity into respective listBoxes
+                     WHERE A.typeID = B.materialTypeID""", [selected])  
         for row in c:
             materialList.insert('end', row[0])
             quantityList.insert('end', row[1])
-
+            
         # Set size of materials and quantity listBoxes based on number retrieved
         materialList.config(height=materialList.size())
         quantityList.config(height=quantityList.size())
@@ -173,41 +222,46 @@ searchBar.place(x=10, y=50)
 # Create/place Labels
 searchbarHeader = Label(font=("eve alpha", 14), text="Bluprint Search")
 blueprintHeader = Label(font=("eve alpha", 14), text="Bluprint Name")
+timeHeader = Label(font=("eve alpha", 14), text="Build Time")
 materialHeader = Label(font=("eve alpha", 14), text="Materials")
 quantityHeader = Label(font=("eve alpha", 14), text="Quantity")
 searchbarHeader.place(x=10, y=10)
 blueprintHeader.place(x=10, y=128)
-materialHeader.place(x=480, y=128)
-quantityHeader.place(x=915, y=128)
+timeHeader.place(x=480, y=168)
+materialHeader.place(x=480, y=268)
+quantityHeader.place(x=915, y=268)
 
 # Create scrollbar
 scrollbar = Scrollbar(orient="vertical")
 
 # Create/place listboxes
-blueprintList = Listbox(fg="#ffffff", background = "#707070", height=22, width=45)
+blueprintList = Listbox(fg="#ffffff", background = "#707070", height=22, width=45, exportselection=0)
 blueprintList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), yscrollcommand=scrollbar.set)
+timeList = Listbox(fg="#ffffff", background = "#707070", width=45)
+timeList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 materialList = Listbox(fg="#ffffff", background = "#707070", width=45)
-materialList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12))
+materialList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 quantityList = Listbox(fg="#ffffff", background = "#707070", width=18)
-quantityList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12))
+quantityList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 blueprintList.place(x=10, y=168)
-materialList.place(x=480, y=168)
-quantityList.place(x=915, y=168)
+timeList.place(x=480, y=208)
+materialList.place(x=480, y=308)
+quantityList.place(x=915, y=308)
 
 # Create/place search bar buttons
 searchButton = Button(window, highlightcolor="#ff5400", text="Search", font=("eve alpha", 11))
-searchButton.configure(command=lambda: searchForBlueprint(conn))
-searchBar.bind("<Return>", lambda event: searchForBlueprint(conn))
+searchButton.configure(command=searchForBlueprint)
+searchBar.bind("<Return>", lambda event: searchForBlueprint())
 clearButton = Button(text="Clear", font=("eve alpha", 11))
-clearButton.configure(command=lambda: populateBlueprints(conn))
+clearButton.configure(command=populateBlueprints)
 searchButton.place(x=480, y=50)
 clearButton.place(x=610, y=50)
 
 # Populate list: blueprintList
-populateBlueprints(conn)
+populateBlueprints()
 
 # Call CurrentSelection function
-blueprintList.bind("<<ListboxSelect>>", lambda event: CurrentSelection(event, conn))
+blueprintList.bind("<<ListboxSelect>>", CurrentSelection)
 
 # Attach scrollbar to blueprintList Listbox
 scrollbar.config(command=blueprintList.yview)

@@ -9,7 +9,7 @@ import sqlite3
 
 conn = sqlite3.connect("data/blueprints.db")
 c = conn.cursor()
-tableCount = 1
+tableCount = 3
 
 # Pull existing table names from database
 temp = conn.execute("""SELECT name
@@ -17,6 +17,9 @@ temp = conn.execute("""SELECT name
                        WHERE type='table'""")
 
 # Add table names to array
+# Table 1 = itemList
+# Table 2 = materialList
+# Table 3 = buildTimes
 tableNames = []
 for name in temp:
     tableNames.append(name[0])
@@ -33,6 +36,9 @@ if not len(tableNames) == tableCount:
         c = conn.cursor()
     
     # Create table itemList
+    # Column 1 = typeID
+    # Column 2 = groupID
+    # Column 3 = typeName
     c.execute("""CREATE TABLE IF NOT EXISTS itemList
         (typeID text, groupID text, typeName text)""")
     reader = csv.reader(open('data/invTypes.csv', encoding="utf8"))
@@ -42,13 +48,30 @@ if not len(tableNames) == tableCount:
                      VALUES (?, ?, ?)""", to_db)
 
     # Create table materialList
+    # Column 1 = typeID
+    # Column 2 = materialTypeID
+    # Column 3 = quantity
     c.execute("""CREATE TABLE IF NOT EXISTS materialList
-        (typeID text, activityID text, materialTypeID text, quantity text)""")
+        (typeID text, materialTypeID text, quantity text)""")
     reader = csv.reader(open('data/industryActivityMaterials.csv', 'r'))
     for row in reader:
-        to_db = [(row[0]), (row[1]), (row[2]), (row[3])]
-        c.execute("""INSERT INTO materialList
-                     VALUES (?, ?, ?, ?)""", to_db)
+        if row[1] == '1':    
+            to_db = [(row[0]), (row[2]), (row[3])]
+            c.execute("""INSERT INTO materialList
+                         VALUES (?, ?, ?)""", to_db)
 
+    # Create table timeList
+    # Column 1 = typeID
+    # Column 2 = time
+    c.execute("""CREATE TABLE IF NOT EXISTS timeList
+        (typeID text, time integer)""")
+    reader = csv.reader(open('data/industryActivity.csv', 'r'))
+    for row in reader:
+        if row[1] == '1':
+            to_db = [(row[0]), (row[2])]
+            c.execute("""INSERT INTO timeList
+                         VALUES (?, ?)""", to_db)                     
+                     
+                     
 conn.commit()
 conn.close()
