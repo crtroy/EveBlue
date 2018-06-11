@@ -1,4 +1,4 @@
-﻿# EveBlue
+# EveBlue
 Copyright (c) 2018 Troy Coats
 
 EveBlue is a simple program to view EVE Online blueprints and the materials required to create them.
@@ -10,8 +10,6 @@ This tool was written in Python3 using Tkinter and sqlite3.
 Setup is pretty straight forward. Just run the file **eveBlue.py**.
 
 If Database needs to be updated (or created for some reason) just make sure the files **invTypes.csv**, **industryActivityMaterials.csv**, and **industryActivity.csv** are in the **data** folder and run **createDB.py**.
-=======
-If Database needs to be updated (or created for some reason) just make sure the files **invTypes.csv**, **industryActivityMaterials.csv**, and **industryActivity.csv**are in the **data** folder and run **createDB.py**.
 
 This program has only been tested using Python3 on Windows 10.
 
