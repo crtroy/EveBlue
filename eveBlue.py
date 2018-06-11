@@ -42,6 +42,7 @@ def resetTables(conn):
     timeList.config(height=1)
     materialList.config(height=1)
     quantityList.config(height=1)
+    nameList.config(background='#707070', selectbackground='#707070')    
     nameList.insert('end', 'No Blueprint Selected')
     timeList.insert('end', 'No Blueprint Selected')
     materialList.insert('end', 'No Blueprint Selected')
@@ -144,6 +145,7 @@ def CurrentSelection(event):
         selected = widget.get(widget.curselection()[0])  
         
         # Output name of selected blueprint
+        nameList.config(background='#454575', selectbackground='#454575')  
         nameList.delete('0', 'end')
         nameList.insert('end', selected)
         
@@ -244,16 +246,16 @@ scrollbar = Scrollbar(orient="vertical")
 
 # Create/place listboxes
 blueprintList = Listbox(fg="#ffffff", background = "#707070", height=22, width=45, exportselection=0)
-blueprintList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12))
+blueprintList.configure(selectborderwidth=10, selectbackground='#454577', font=("Helvetica", 12))
 blueprintList.configure(yscrollcommand=scrollbar.set)
-nameList = Listbox(fg="#ffffff", background = "#707070", width=67)
-nameList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
+nameList = Listbox(fg="#ffffff", background = "#454577", width=67)
+nameList.configure(selectborderwidth=10, selectbackground='#454575', font=("Helvetica", 12), exportselection=0)
 timeList = Listbox(fg="#ffffff", background = "#707070", width=45)
-timeList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
+timeList.configure(selectborderwidth=10, selectbackground='#707070', font=("Helvetica", 12), exportselection=0)
 materialList = Listbox(fg="#ffffff", background = "#707070", width=45)
-materialList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
+materialList.configure(selectborderwidth=10, selectbackground='#707070', font=("Helvetica", 12), exportselection=0)
 quantityList = Listbox(fg="#ffffff", background = "#707070", width=18)
-quantityList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
+quantityList.configure(selectborderwidth=10, selectbackground='#707070', font=("Helvetica", 12), exportselection=0)
 blueprintList.place(x=10, y=168)
 nameList.place(x=480, y=118)
 timeList.place(x=480, y=208)
