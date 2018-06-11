@@ -33,13 +33,16 @@ def loadfont(fontpath, private=True, enumerable=False):
 
 # Clear/reset lists
 def resetTables(conn):
-    blueprintList.delete('0','end')  
+    blueprintList.delete('0','end')
+    nameList.delete('0','end')      
     timeList.delete('0','end') 
     materialList.delete('0','end')
     quantityList.delete('0','end')
+    nameList.config(height=1)
     timeList.config(height=1)
     materialList.config(height=1)
     quantityList.config(height=1)
+    nameList.insert('end', 'No Blueprint Selected')
     timeList.insert('end', 'No Blueprint Selected')
     materialList.insert('end', 'No Blueprint Selected')
     quantityList.insert('end', '00000000')
@@ -138,7 +141,11 @@ def CurrentSelection(event):
     widget = event.widget
     # Check to see if listBox was set to empty
     if blueprintList.get(0,0) != ('Search returned no results',):
-        selected = widget.get(widget.curselection()[0])
+        selected = widget.get(widget.curselection()[0])  
+        
+        # Output name of selected blueprint
+        nameList.delete('0', 'end')
+        nameList.insert('end', selected)
         
         # Delete old values from materials and quantity listBoxes
         timeList.delete('0','end')        
@@ -192,6 +199,7 @@ def CurrentSelection(event):
         for i in range(0,quantityList.size()):   
             quantityList.itemconfigure(i, {'fg': '#ffffff'})
 
+
 ##################################################################################################
 ##########          Body       ###################################################################
 ##################################################################################################
@@ -236,7 +244,10 @@ scrollbar = Scrollbar(orient="vertical")
 
 # Create/place listboxes
 blueprintList = Listbox(fg="#ffffff", background = "#707070", height=22, width=45, exportselection=0)
-blueprintList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), yscrollcommand=scrollbar.set)
+blueprintList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12))
+blueprintList.configure(yscrollcommand=scrollbar.set)
+nameList = Listbox(fg="#ffffff", background = "#707070", width=67)
+nameList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 timeList = Listbox(fg="#ffffff", background = "#707070", width=45)
 timeList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 materialList = Listbox(fg="#ffffff", background = "#707070", width=45)
@@ -244,6 +255,7 @@ materialList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("
 quantityList = Listbox(fg="#ffffff", background = "#707070", width=18)
 quantityList.configure(selectborderwidth=10, selectbackground='#ff4500', font=("Helvetica", 12), exportselection=0)
 blueprintList.place(x=10, y=168)
+nameList.place(x=480, y=118)
 timeList.place(x=480, y=208)
 materialList.place(x=480, y=308)
 quantityList.place(x=915, y=308)
