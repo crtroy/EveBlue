@@ -34,16 +34,17 @@ def loadfont(fontpath, private=True, enumerable=False):
 # Clear/reset lists
 def resetTables(conn):
     blueprintList.delete('0','end')
-    nameList.delete('0','end')      
+    nameText.config(state='normal')
+    nameText.delete('1.0','end')      
     timeList.delete('0','end') 
     materialList.delete('0','end')
     quantityList.delete('0','end')
-    nameList.config(height=1)
+    nameText.config(height=1)
     timeList.config(height=1)
     materialList.config(height=1)
     quantityList.config(height=1)
-    nameList.config(background='#707070', selectbackground='#707070')    
-    nameList.insert('end', 'No Blueprint Selected')
+    nameText.insert('end', 'No Blueprint Selected', 'justify')
+    nameText.config(bg='#707070', selectbackground='#707070', state='disabled')   
     timeList.insert('end', 'No Blueprint Selected')
     materialList.insert('end', 'No Blueprint Selected')
     quantityList.insert('end', '00000000')
@@ -93,9 +94,9 @@ def populateBlueprints():
     for row in c:
         blueprintList.insert('end', row[0])
     for i in range(0,blueprintList.size(),2):
-        blueprintList.itemconfigure(i, background='#707070')
+        blueprintList.itemconfigure(i, bg='#707070')
     for i in range(1,blueprintList.size(),2):   
-        blueprintList.itemconfigure(i, background='#808080')
+        blueprintList.itemconfigure(i, bg='#808080')
     
     blueprintList.configure(height=22)
     scrollbar.grid(padx=440, pady=168, row=0,column=0, ipady=405)
@@ -117,9 +118,9 @@ def searchForBlueprint():
     for row in c:
         blueprintList.insert('end', row[0])
     for i in range(0,blueprintList.size(),2):
-        blueprintList.itemconfigure(i, background='#707070')
+        blueprintList.itemconfigure(i, bg='#707070')
     for i in range(1,blueprintList.size(),2):   
-        blueprintList.itemconfigure(i, background='#808080') 
+        blueprintList.itemconfigure(i, bg='#808080') 
     
     # If no results were returned    
     if blueprintList.size() == 0:
@@ -145,9 +146,10 @@ def CurrentSelection(event):
         selected = widget.get(widget.curselection()[0])  
         
         # Output name of selected blueprint
-        nameList.config(background='#454575', selectbackground='#454575')  
-        nameList.delete('0', 'end')
-        nameList.insert('end', selected)
+        nameText.config(state='normal')        
+        nameText.delete('1.0', 'end')
+        nameText.insert('end', selected, 'justify')
+        nameText.config(bg='#454575', selectbackground='#454575', state='disabled')
         
         # Delete old values from materials and quantity listBoxes
         timeList.delete('0','end')        
@@ -189,15 +191,15 @@ def CurrentSelection(event):
         # Create alternating background colors for materials and quantity listBoxes
         # Based on new listBox size
         for i in range(0,materialList.size(),2):
-            materialList.itemconfigure(i, background='#707070')
+            materialList.itemconfigure(i, bg='#707070')
         for i in range(1,materialList.size(),2):   
-            materialList.itemconfigure(i, background='#808080')
+            materialList.itemconfigure(i, bg='#808080')
         for i in range(0,materialList.size()):   
             materialList.itemconfigure(i, {'fg': '#ffffff'})      
         for i in range(0,quantityList.size(),2):
-            quantityList.itemconfigure(i, background='#707070')
+            quantityList.itemconfigure(i, bg='#707070')
         for i in range(1,quantityList.size(),2):   
-            quantityList.itemconfigure(i, background='#808080')
+            quantityList.itemconfigure(i, bg='#808080')
         for i in range(0,quantityList.size()):   
             quantityList.itemconfigure(i, {'fg': '#ffffff'})
 
@@ -226,7 +228,7 @@ backgroundLabel.place(x=-600, y=0, relheight=1)
 
 # Create/place search bar
 searchBar = Entry(bd=4, width=47, selectforeground="#ffffff",insertbackground='#ff4500')
-searchBar.configure(background="#404040", fg="#ffffff", font=("Helvetica", 12))
+searchBar.configure(bg="#404040", fg="#ffffff", font=("Helvetica", 12))
 searchBar.place(x=10, y=50)
 
 # Create/place Labels
@@ -244,20 +246,24 @@ quantityHeader.place(x=915, y=268)
 # Create scrollbar
 scrollbar = Scrollbar(orient="vertical")
 
+# Create name Text
+nameText = Text(fg="#ffffff", bg = "#454577", width=67, relief='raised')
+nameText.configure(borderwidth=10, selectbackground='#454575', font=("Helvetica", 12), exportselection=0)
+nameText.tag_configure('justify', justify='center')
+nameText.place(x=480, y=118)
+
 # Create/place listboxes
-blueprintList = Listbox(fg="#ffffff", background = "#707070", height=22, width=45, exportselection=0)
+blueprintList = Listbox(fg="#ffffff", bg = "#707070", height=22, width=45, exportselection=0)
 blueprintList.configure(selectborderwidth=10, selectbackground='#454577', font=("Helvetica", 12))
 blueprintList.configure(yscrollcommand=scrollbar.set)
-nameList = Listbox(fg="#ffffff", background = "#454577", width=67, relief='raised')
-nameList.configure(borderwidth=10, selectbackground='#454575', font=("Helvetica", 12), exportselection=0)
-timeList = Listbox(fg="#ffffff", background = "#707070", width=45)
+timeList = Listbox(fg="#ffffff", bg = "#707070", width=45)
 timeList.configure(selectborderwidth=10, selectbackground='#707070', font=("Helvetica", 12), exportselection=0)
-materialList = Listbox(fg="#ffffff", background = "#707070", width=45)
+materialList = Listbox(fg="#ffffff", bg = "#707070", width=45)
 materialList.configure(selectborderwidth=10, selectbackground='#707070', font=("Helvetica", 12), exportselection=0)
-quantityList = Listbox(fg="#ffffff", background = "#707070", width=18)
+quantityList = Listbox(fg="#ffffff", bg = "#707070", width=18)
 quantityList.configure(selectborderwidth=10, selectbackground='#707070', font=("Helvetica", 12), exportselection=0)
 blueprintList.place(x=10, y=168)
-nameList.place(x=480, y=118)
+
 timeList.place(x=480, y=208)
 materialList.place(x=480, y=308)
 quantityList.place(x=915, y=308)
