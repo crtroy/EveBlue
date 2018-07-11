@@ -51,36 +51,39 @@ def resetTables(conn):
 
 # Calculate build time
 def buildTime(time):
-    days = int(time / 86400)
-    hours = int((time - 86400 * days) / 3600)
-    minutes = int(((time - 86400 * days) - (3600 * hours)) / 60)
-    seconds = int(((time - 86400 * days) - (3600 * hours)) - (60 * minutes))
-    if days > 0:
-        totalTime = str(days) + " day"
-        if days > 1:
-            totalTime = totalTime + "s"
-    if hours > 0:
+    if time == 0:
+	return "Instant"
+    else:
+        days = int(time / 86400)
+        hours = int((time - 86400 * days) / 3600)
+        minutes = int(((time - 86400 * days) - (3600 * hours)) / 60)
+        seconds = int(((time - 86400 * days) - (3600 * hours)) - (60 * minutes))
         if days > 0:
-            totalTime = totalTime + ", " + str(hours) + " hour"
-        else:
-            totalTime = str(hours) + " hour"
-        if hours > 1:
-            totalTime = totalTime + "s"
-    if minutes > 0:
-        if days > 0 or hours > 0:
-            totalTime = totalTime + ", " + str(minutes) + " minute"
-        else:
-            totalTime = str(minutes) + " minute"
-        if minutes > 1:
-            totalTime = totalTime + "s"
-    if seconds > 0:
-        if days > 0 or hours > 0 or minutes > 0:
-            totalTime = totalTime + ", " + str(seconds) + " second"
-        else:
-            totalTime = str(seconds) + " second"
-        if seconds > 1:
-            totalTime = totalTime + "s"
-    return totalTime
+            totalTime = str(days) + " day"
+            if days > 1:
+                totalTime = totalTime + "s"
+        if hours > 0:
+            if days > 0:
+                totalTime = totalTime + ", " + str(hours) + " hour"
+            else:
+                totalTime = str(hours) + " hour"
+            if hours > 1:
+                totalTime = totalTime + "s"
+        if minutes > 0:
+            if days > 0 or hours > 0:
+                totalTime = totalTime + ", " + str(minutes) + " minute"
+            else:
+                totalTime = str(minutes) + " minute"
+            if minutes > 1:
+                totalTime = totalTime + "s"
+        if seconds > 0:
+            if days > 0 or hours > 0 or minutes > 0:
+                totalTime = totalTime + ", " + str(seconds) + " second"
+            else:
+                totalTime = str(seconds) + " second"
+            if seconds > 1:
+                totalTime = totalTime + "s"
+        return totalTime 
    
 # Populate lists with new data    
 def populateBlueprints():
