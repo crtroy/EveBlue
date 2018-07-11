@@ -52,7 +52,7 @@ def resetTables(conn):
 # Calculate build time
 def buildTime(time):
     if time == 0:
-	return "Instant"
+        return "Instant"
     else:
         days = int(time / 86400)
         hours = int((time - 86400 * days) / 3600)
